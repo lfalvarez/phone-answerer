@@ -3,7 +3,7 @@ var request = require('supertest');
 var superagent = require('superagent');
 var app = require('../app');
 
-describe("the index", function(){
+describe("when I call on the phone", function(){
     before(function(){
 
     }); 
@@ -16,12 +16,14 @@ describe("the index", function(){
     afterEach(function(){
 
     });
-    it("should be accessible", function(done){
+    it("it says hello world", function(done){
         request(app)
-        .get("/")
+        .post("/")
         .set('Accept', 'text/html')
         .expect(200)
-        .end(function(){
+        .end(function(err, res){
+            var text = JSON.parse(res.text).tropo[0].say.value
+            text.should.equal("Hello World!")
             done();
         })
     })

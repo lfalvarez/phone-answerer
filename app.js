@@ -4,9 +4,8 @@
  */
 
 var express = require('express')
-  , routes = require('./routes')
-  , user = require('./routes/user')
   , http = require('http')
+  , tropowebapi = require('tropo-webapi')
   , path = require('path');
 
 var app = express();
@@ -28,8 +27,14 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-app.get('/', routes.index);
-app.get('/users', user.list);
+app.post('/', function(req, res){
+	// Create a new instance of the TropoWebAPI object.
+	var tropo = new tropowebapi.TropoWebAPI();
+	// Use the say method https://www.tropo.com/docs/webapi/say.htm
+	tropo.say("Hello World!");
+
+    res.send(tropowebapi.TropoJSON(tropo));
+})
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
