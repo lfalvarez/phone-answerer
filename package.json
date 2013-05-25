@@ -17,5 +17,9 @@
   	"should": "*",
   	"superagent": "*",
   	"supertest": "*"
+  },
+  "engines": {
+    "node": "0.8.16",
+    "npm": "1.2.10"
   }
 }
