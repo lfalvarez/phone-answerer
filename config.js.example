@@ -1,0 +1,9 @@
+var config = {};
+
+config.username = "user";
+config.url = "sftp://user@ip:/path/to/folder/"
+config.name = "the_name"
+config.password = "password"
+
+
+module.exports = config;
