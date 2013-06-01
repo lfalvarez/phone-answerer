@@ -32,7 +32,7 @@ app.post('/', function(req, res){
 	// Create a new instance of the TropoWebAPI object.
 	var tropo = new tropowebapi.TropoWebAPI();
 	// Use the say method https://www.tropo.com/docs/webapi/say.htm
-	tropo.say("Hola Sergio!",null, null, null, "Francisca");
+	tropo.say("Di algo después del bip tienes 30 segundos!",null, null, null, "Francisca");
   tropo.record(null, null, null, null, null, null, null, null, null, config.name , null, null,null,null, config.url ,config.password,config.username)
 
     res.send(tropowebapi.TropoJSON(tropo));

@@ -26,7 +26,7 @@ describe("when I call on the phone", function(){
         .end(function(err, res){
             var text = JSON.parse(res.text).tropo[0].say.value
             var voice = JSON.parse(res.text).tropo[0].say.voice
-            text.should.equal("Hola Sergio!")
+            text.should.equal("Di algo después del bip tienes 30 segundos!")
             voice.should.equal("Francisca")
             done();
         })
