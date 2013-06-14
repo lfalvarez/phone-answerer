@@ -27,7 +27,7 @@ describe("when I call on the phone", function(){
     afterEach(function(){
 
     });
-    it("it says hello world", function(){
+    it("it says hola mundo", function(){
         var text = tropo_response[0].say.value
         var voice = tropo_response[0].say.voice
         text.should.equal("Di algo después del bip tienes 30 segundos!")
