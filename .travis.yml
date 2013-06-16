@@ -1,6 +1,8 @@
 language: node_js
 env:
-  - FTP_USERNAME="user" FTP_URL="ftp_url" RECORD_NAME="name" FTP_PASSWORD="password"
+  - FTP_USERNAME="user" FTP_URL="ftp_url" RECORD_NAME="name" FTP_PASSWORD="password" MONGO_DB="mongodb://127.0.0.1"
+services:
+  - mongodb
 node_js:
   - "0.8"
 
