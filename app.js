@@ -7,7 +7,10 @@ var express = require('express')
   , http = require('http')
   , tropowebapi = require('tropo-webapi')
   , path = require('path')
+  , mongoose = require('mongoose')
   , config = require('./config');
+
+mongoose.connect(config.mongo_db);
 
 var app = express();
 
@@ -44,6 +47,8 @@ app.post('/', function(req, res){
   record.password = config.password;
   record.username = config.username;
   tropo.tropo.push({"record":record})
+
+  
   res.send(tropowebapi.TropoJSON(tropo));
 })
 var port = process.env.PORT || 5000;
