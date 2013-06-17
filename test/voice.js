@@ -4,6 +4,7 @@ var superagent = require('superagent');
 var app = require('../app');
 var config = require('../config')
 var incoming_call_json = require('./fixtures/incoming_call')
+var IncomingCallRecord = require('../lib/models/incoming_call_record')
 
 
 describe("when I call on the phone", function(){
@@ -20,14 +21,16 @@ describe("when I call on the phone", function(){
             done();
         })
     }); 
-    after(function(){
-
+    after(function(done){
+        IncomingCallRecord.remove(function(err){
+            done()
+        })
     });
     beforeEach(function(){
 
     });
     afterEach(function(){
-
+        
     });
     it("it says hola mundo", function(){
         var text = tropo_response[0].say.value
@@ -42,5 +45,13 @@ describe("when I call on the phone", function(){
         record.username.should.equal(config.username)
         record.password.should.equal(config.password)
         
+    })
+    it("saves a record of the call", function(done){
+        IncomingCallRecord.findOne().exec(function(err, record){
+            should.not.exist(err);
+            should.exist(record)
+            record.from.should.equal(incoming_call_json.session.from.name)
+            done()
+        })
     })
 });

@@ -8,6 +8,7 @@ var express = require('express')
   , tropowebapi = require('tropo-webapi')
   , path = require('path')
   , mongoose = require('mongoose')
+  , IncomingCallRecord = require('./lib/models/incoming_call_record')
   , config = require('./config');
 
 mongoose.connect(config.mongo_db);
@@ -48,8 +49,11 @@ app.post('/', function(req, res){
   record.username = config.username;
   tropo.tropo.push({"record":record})
 
-  
-  res.send(tropowebapi.TropoJSON(tropo));
+  var record = IncomingCallRecord();
+  record.from = req.body.session.from.name;
+  record.save(function(){
+      res.send(tropowebapi.TropoJSON(tropo));
+    })
 })
 var port = process.env.PORT || 5000;
 http.createServer(app).listen(port, function(){
