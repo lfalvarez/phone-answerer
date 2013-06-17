@@ -3,6 +3,7 @@ var request = require('supertest');
 var superagent = require('superagent');
 var app = require('../app');
 var config = require('../config')
+var incoming_call_json = require('./fixtures/incoming_call')
 
 
 describe("when I call on the phone", function(){
@@ -10,6 +11,7 @@ describe("when I call on the phone", function(){
     before(function(done){
         request(app)
         .post("/")
+        .send(incoming_call_json)
         .set('Accept', 'text/html')
         .expect(200)
         .end(function(err, res){
