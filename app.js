@@ -43,28 +43,6 @@ app.post('/sms', function(req,res){
   res.send(res.send(tropowebapi.TropoJSON(tropo)))
 })
 
-/*
-app.post('/sms', function(req, res){
-
-
-  var tropo = new tropowebapi.TropoWebAPI();
-  var oliwi = new Say();
-  oliwi.value = "oli felipinwi"
-  message = new Message()
-  message.say = oliwi
-  message.to = 'tel:+56973961732'
-
-  //el numero from tiene que ser en este formato
-  message.from = '+14038009468'
-  message.channel = 'TEXT'
-  message.network = 'SMS'
-
-  tropo.tropo.push({"message":message})
-  res.send(tropowebapi.TropoJSON(tropo));
-
-
-})*/
-
 app.post('/', function(req, res){
   var tropo = new tropowebapi.TropoWebAPI();
   if(req.body.session.userType == 'HUMAN'){
