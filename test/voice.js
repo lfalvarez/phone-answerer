@@ -16,6 +16,7 @@ describe("when I call on the phone", function(){
         .set('Accept', 'text/html')
         .expect(200)
         .end(function(err, res){
+            should.not.exist(err)
             tropo_response = JSON.parse(res.text).tropo;
             
             done();
