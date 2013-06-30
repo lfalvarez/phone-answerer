@@ -76,7 +76,7 @@ describe("The IncomingCallRecord", function(){
                     .populate('remote_message')
                     .exec(function(err, retrieved_record){
                         should.not.exist(err)
-                        should.exist(retrieved_record.remote_message)
+                        retrieved_record.should.have.property('remote_message')
                         remote_message._id.equals(retrieved_record.remote_message._id).should.be.ok
                         retrieved_record.remote_message.remote_url.should.equal(remote_message.remote_url)
                         done()
