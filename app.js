@@ -32,15 +32,17 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 app.post('/sms', function(req,res){
+  var number = req.body.session.parameters.number
   var tropo = new tropowebapi.TropoWebAPI();
   var content = new Say()
-  content.value = 'whatever'
+  content.value = req.body.session.parameters.msg
   var message = new Message()
   message.say = content
   message.from = config.from_international_number
+  message.to = number
   tropo.tropo.push({'message':message})
 
-  res.send(res.send(tropowebapi.TropoJSON(tropo)))
+  res.send(tropowebapi.TropoJSON(tropo))
 })
 
 app.post('/', function(req, res){

@@ -5,6 +5,7 @@ var app = require('../app');
 var config = require('../config')
 var incoming_call_json = require('./fixtures/incoming_call')
 var IncomingCallRecord = require('../lib/models/incoming_call_record')
+var send_sms_request = require('./fixtures/incoming_sms_request')
 
 
 describe("when the app sends an SMS", function(){
@@ -12,7 +13,7 @@ describe("when the app sends an SMS", function(){
     before(function(done){
         request(app)
         .post("/sms")
-        .send(incoming_call_json)
+        .send(send_sms_request)
         .set('Accept', 'text/html')
         .expect(200)
         .end(function(err, res){
@@ -36,8 +37,8 @@ describe("when the app sends an SMS", function(){
     it("it says whatever from the international number", function(){
         var message = tropo_response[0].message;
         var say = message.say
-        message.say.value.should.equal('whatever')
+        message.say.value.should.equal('This is a test SMS message from Node.js.' )
         message.from.should.equal(config.from_international_number)
-        //message.to not yet defined
+        message.to.should.equal('5551234567')
     })
 });
