@@ -42,7 +42,8 @@ describe("when I call on the phone", function(){
     it("it records a message", function(){
         var record = tropo_response[1].record
         record.name.should.equal(config.name)
-        record.url.should.equal(config.url)
+        var expected_url_regexp = new RegExp(config.url+"(?:\\w){36}(?:\\.wav)");
+        record.url.should.match(expected_url_regexp)
         record.username.should.equal(config.username)
         record.password.should.equal(config.password)
         
@@ -53,6 +54,22 @@ describe("when I call on the phone", function(){
             should.exist(record)
             record.from.should.equal(incoming_call_json.session.from.name)
             done()
+        })
+    })
+    it("if is called twice I get two different names for the file", function(done){
+        var first_url = tropo_response[1].record.url
+        var record_name = first_url
+        request(app)
+        .post("/")
+        .send(incoming_call_json)
+        .set('Accept', 'text/html')
+        .expect(200)
+        .end(function(err, res){
+            should.not.exist(err)
+            var second_url = JSON.parse(res.text).tropo[1].record.url
+            var second_record_name = second_url
+            second_record_name.should.not.equal(first_url)
+            done();
         })
     })
 });

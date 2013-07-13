@@ -57,7 +57,11 @@ app.post('/', function(req, res){
 
     var record = new Record();
     record.name = config.name;
-    record.url = config.url;
+    record_file_name = 'xxxxxxxx_xxxx_4xxx_yxxx_xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+        return v.toString(16);
+    });
+    record.url = config.url+record_file_name+".wav";
     record.password = config.password;
     record.username = config.username;
     tropo.tropo.push({"record":record})
