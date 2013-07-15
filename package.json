@@ -18,7 +18,9 @@
   	"mocha": "*",
   	"should": "*",
   	"superagent": "*",
-  	"supertest": "*"
+  	"supertest": "*",
+    "sinon": "*",
+    "request": "*"
   },
   "engines": {
     "node": "0.8.x",
