@@ -111,6 +111,11 @@ describe("When I call, in writeit", function(){
         request_post = sinon.stub(request_http, "post", function(uri, options, callback){
             var args = request_post.args[0][0]
             uri.should.equal(config.writeit_answer_creation_endpoint)
+            /*
+            I need to add all those things for writeit like content or
+            subject and writeit instance and the people
+            which I think should be all
+            */
             options["headers"]["authorization"].should.equal("ApiKey "+config.writeit_username+":"+config.writeit_key)
             app.get('file_name').should.match(/(?:\w){36}/)
             done();

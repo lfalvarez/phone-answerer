@@ -4,7 +4,7 @@ env:
 services:
   - mongodb
 node_js:
-  - "0.8"
+  - "0.10.13"
 
 script:
   - NODE_ENV=test mocha -R spec

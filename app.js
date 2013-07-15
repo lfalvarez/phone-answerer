@@ -55,8 +55,6 @@ app.post('/', function(req, res){
     welcome.value = "Di algo después del bip tienes 30 segundos!"
     welcome.voice = "Francisca"
     tropo.tropo.push({"say":welcome})
-
-
     var record = new Record();
     record.name = config.name;
     record_file_name = 'xxxxxxxx_xxxx_4xxx_yxxx_xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -68,10 +66,6 @@ app.post('/', function(req, res){
     record.password = config.password;
     record.username = config.username;
     tropo.tropo.push({"record":record})
-
-    
-
-
     var options = {
         "headers":{"authorization":"ApiKey "+config.writeit_username+":"+config.writeit_key}
     }
