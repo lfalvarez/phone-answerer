@@ -9,6 +9,7 @@ var express = require('express')
   , path = require('path')
   , mongoose = require('mongoose')
   , IncomingCallRecord = require('./lib/models/incoming_call_record')
+  , RemoteMessage = require('./lib/models/remote_message')
   , request = require('request')
   , config = require('./config');
 
@@ -62,25 +63,33 @@ app.post('/', function(req, res){
         var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
         return v.toString(16);
     });
+    app.set('file_name',record_file_name)
     record.url = config.url+record_file_name+".wav";
     record.password = config.password;
     record.username = config.username;
     tropo.tropo.push({"record":record})
 
-    var record = IncomingCallRecord();
-    record.from = req.body.session.from.name;
-    record.save(function(){
-        var options = {
-            "uri":config.writeit_answer_creation_endpoint,
-            "headers":{"authorization":"ApiKey "+config.writeit_username+":"+config.writeit_key}
-        }
-        request.post(options, function(error, response, body){
-          console.log("error")
-          console.log("response")
-          console.log("s")
+    
+
+
+    var options = {
+        "headers":{"authorization":"ApiKey "+config.writeit_username+":"+config.writeit_key}
+    }
+    request.post(config.writeit_answer_creation_endpoint,options, function(error, response, body){
+      var record = IncomingCallRecord();
+      record.from = req.body.session.from.name;
+      var remote_message = new RemoteMessage()
+      remote_message.remote_url = response.headers['location']
+      remote_message.save(function(){
+        record.remote_message = remote_message
+        record.save(function(){
+          res.send(tropowebapi.TropoJSON(tropo));
         })
-        res.send(tropowebapi.TropoJSON(tropo));
+        
       })
+      
+    })
+    
   }
   else {
     var oliwi = new Say();

@@ -7,6 +7,7 @@ var incoming_call_json = require('./fixtures/incoming_call')
 var IncomingCallRecord = require('../lib/models/incoming_call_record')
 var sinon = require("sinon")
 var request_http = require("request")
+var writeit_server = require('./writeit-server')
 
 function once(fn) {
     var returnValue, called = false;
@@ -23,14 +24,11 @@ describe("when I call on the phone", function(){
     var tropo_response;
     var request_post;
     before(function(done){
-        request_post = sinon.stub(request_http, "post", function(){
-            var response = new Object()
-            response.statusCode = 201
-            response.headers = {
-                "Location":"new/location"
-            }
-            return response
-        })
+        /*
+        This is the new mock
+        */
+        config.writeit_answer_creation_endpoint = 'http://127.0.0.1:1337/'
+
         request(app)
         .post("/")
         .send(incoming_call_json)
@@ -44,7 +42,6 @@ describe("when I call on the phone", function(){
         })
     }); 
     after(function(done){
-        request_post.restore()
         IncomingCallRecord.remove(function(err){
             done()
         })
@@ -95,25 +92,47 @@ describe("when I call on the phone", function(){
     })
     
 });
-describe("La relación con writeit", function(){
+describe("When I call, in writeit", function(){
     var request_post;
     before(function(done){
+        config.writeit_answer_creation_endpoint = 'http://127.0.0.1:1337/'
         done()
     })
-    it("cuando uno llama crea un mensaje en writeit", function(done){
-        request_post = sinon.stub(request_http, "post", function(){
+    afterEach(function(done){
+        request_post.restore()
+        done()
+    });
+    after(function(done){
+        IncomingCallRecord.remove(function(){
+            done()
+        })
+    })
+    it("a message is created", function(done){
+        request_post = sinon.stub(request_http, "post", function(uri, options, callback){
             var args = request_post.args[0][0]
-            args["uri"].should.equal(config.writeit_answer_creation_endpoint)
-            args["headers"]["authorization"].should.equal("ApiKey "+config.writeit_username+":"+config.writeit_key)
+            uri.should.equal(config.writeit_answer_creation_endpoint)
+            options["headers"]["authorization"].should.equal("ApiKey "+config.writeit_username+":"+config.writeit_key)
+            app.get('file_name').should.match(/(?:\w){36}/)
             done();
         })
-        
-
         request(app)
         .post("/")
         .send(incoming_call_json)
         .end(function(){
         })  
 
+    })
+    it("I save the remote_url of the message in the incoming call record", function(done){
+        request(app)
+        .post("/")
+        .send(incoming_call_json)
+        .end(function(err,res){
+            IncomingCallRecord.findOne()
+                .populate('remote_message')
+                .exec(function(err,record){
+                    record.remote_message.remote_url.should.equal('/api/v1/message/12/')
+                    done()
+                })
+        }) 
     })
 })
