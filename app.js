@@ -91,18 +91,6 @@ app.post('/', function(req, res){
     })
     
   }
-  else {
-    var oliwi = new Say();
-    oliwi.value = "oli felipinwi"
-    call = new Call()
-    call.to = 'tel:+56973961732'
-    call.from = 'tel:+4038009468'
-
-    tropo.tropo.push({"call":call})
-    tropo.tropo.push({"say":oliwi})    
-
-  }
-  res.send(tropowebapi.TropoJSON(tropo));
 	
 })
 var port = process.env.PORT || 5000;
