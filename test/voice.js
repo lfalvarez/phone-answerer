@@ -5,11 +5,32 @@ var app = require('../app');
 var config = require('../config')
 var incoming_call_json = require('./fixtures/incoming_call')
 var IncomingCallRecord = require('../lib/models/incoming_call_record')
+var sinon = require("sinon")
+var request_http = require("request")
 
+function once(fn) {
+    var returnValue, called = false;
+    return function () {
+        if (!called) {
+            called = true;
+            returnValue = fn.apply(this, arguments);
+        }
+        return returnValue;
+    };
+}
 
 describe("when I call on the phone", function(){
     var tropo_response;
+    var request_post;
     before(function(done){
+        request_post = sinon.stub(request_http, "post", function(){
+            var response = new Object()
+            response.statusCode = 201
+            response.headers = {
+                "Location":"new/location"
+            }
+            return response
+        })
         request(app)
         .post("/")
         .send(incoming_call_json)
@@ -23,12 +44,12 @@ describe("when I call on the phone", function(){
         })
     }); 
     after(function(done){
+        request_post.restore()
         IncomingCallRecord.remove(function(err){
             done()
         })
     });
     beforeEach(function(){
-
     });
     afterEach(function(){
         
@@ -56,7 +77,7 @@ describe("when I call on the phone", function(){
             done()
         })
     })
-    it("if is called twice I get two different names for the file", function(done){
+    it("if is called twice it gets two different names for the file", function(done){
         var first_url = tropo_response[1].record.url
         var record_name = first_url
         request(app)
@@ -72,4 +93,27 @@ describe("when I call on the phone", function(){
             done();
         })
     })
+    
 });
+describe("La relación con writeit", function(){
+    var request_post;
+    before(function(done){
+        done()
+    })
+    it("cuando uno llama crea un mensaje en writeit", function(done){
+        request_post = sinon.stub(request_http, "post", function(){
+            var args = request_post.args[0][0]
+            args["uri"].should.equal(config.writeit_answer_creation_endpoint)
+            args["headers"]["authorization"].should.equal("ApiKey "+config.writeit_username+":"+config.writeit_key)
+            done();
+        })
+        
+
+        request(app)
+        .post("/")
+        .send(incoming_call_json)
+        .end(function(){
+        })  
+
+    })
+})

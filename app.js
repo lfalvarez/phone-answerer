@@ -9,6 +9,7 @@ var express = require('express')
   , path = require('path')
   , mongoose = require('mongoose')
   , IncomingCallRecord = require('./lib/models/incoming_call_record')
+  , request = require('request')
   , config = require('./config');
 
 mongoose.connect(config.mongo_db);
@@ -69,6 +70,15 @@ app.post('/', function(req, res){
     var record = IncomingCallRecord();
     record.from = req.body.session.from.name;
     record.save(function(){
+        var options = {
+            "uri":config.writeit_answer_creation_endpoint,
+            "headers":{"authorization":"ApiKey "+config.writeit_username+":"+config.writeit_key}
+        }
+        request.post(options, function(error, response, body){
+          console.log("error")
+          console.log("response")
+          console.log("s")
+        })
         res.send(tropowebapi.TropoJSON(tropo));
       })
   }
