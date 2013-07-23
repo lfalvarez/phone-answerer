@@ -68,8 +68,18 @@ app.post('/', function(req, res){
     record.password = config.password;
     record.username = config.username;
     tropo.tropo.push({"record":record})
+    var from_number = req.body.session.from.name.substring(0,2)
+    from_number += "XXXXXXXX"
+    from_number += req.body.session.from.name.substring(10,12)
     var options = {
-        "headers":{"authorization":"ApiKey "+config.writeit_username+":"+config.writeit_key}
+        "headers":{"authorization":"ApiKey "+config.writeit_username+":"+config.writeit_key},
+        "form": {
+                'author_name' : from_number,
+                'subject': 'Mensaje telefónico',
+                'content': app.get('file_name')+".wav",
+                'writeitinstance': config.remote_writeitinstance_url,
+                'persons': 'all'
+            }
     }
     request.post(config.writeit_answer_creation_endpoint,options, function(error, response, body){
       var record = IncomingCallRecord();
