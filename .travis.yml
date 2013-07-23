@@ -1,6 +1,6 @@
 language: node_js
 env:
-  - FTP_USERNAME="user" FTP_URL="ftp_url" RECORD_NAME="name" FTP_PASSWORD="password" MONGO_DB="mongodb://127.0.0.1" FROM_INTERNATIONAL_NUMBER="+123456789" WRITEIT_ANSWER_CREATION_ENDPOINT="http://localhost:1337" WRITEIT_USERNAME="admin" WRITEIT_KEY="a"
+  - FTP_USERNAME="user" FTP_URL="ftp_url" RECORD_NAME="name" FTP_PASSWORD="password" MONGO_DB="mongodb://127.0.0.1" FROM_INTERNATIONAL_NUMBER="+123456789" WRITEIT_ANSWER_CREATION_ENDPOINT="http://localhost:1337" WRITEIT_USERNAME="admin" WRITEIT_KEY="a" REMOTE_WRITEITINSTANCE_URL="/api/v1/instance/1/"
 services:
   - mongodb
 node_js:
