@@ -73,10 +73,10 @@ app.post('/', function(req, res){
     from_number += req.body.session.from.name.substring(10,12)
     var options = {
         "headers":{"authorization":"ApiKey "+config.writeit_username+":"+config.writeit_key},
-        "form": {
+        "json": {
                 'author_name' : from_number,
                 'subject': 'Mensaje telefónico',
-                'content': app.get('file_name')+".wav",
+                'content': config.recording_root_url + app.get('file_name')+".wav",
                 'writeitinstance': config.remote_writeitinstance_url,
                 'persons': 'all'
             }

@@ -119,12 +119,12 @@ describe("When I call, in writeit", function(){
             This is the data sent to writeit
             the content should be the link to the message file
             */
-            options.should.have.property("form")
-            options["form"]["author_name"].should.equal('56XXXXXXXX23');
-            options["form"]["subject"].should.equal('Mensaje telefónico');
-            options["form"]["content"].should.equal(app.get('file_name')+".wav");
-            options["form"]["writeitinstance"].should.equal(config.remote_writeitinstance_url);
-            options["form"]["persons"].should.equal('all');
+            options.should.have.property("json")
+            options["json"]["author_name"].should.equal('56XXXXXXXX23');
+            options["json"]["subject"].should.equal('Mensaje telefónico');
+            options["json"]["content"].should.equal(config.recording_root_url + app.get('file_name')+".wav");
+            options["json"]["writeitinstance"].should.equal(config.remote_writeitinstance_url);
+            options["json"]["persons"].should.equal('all');
             done();
         })
         request(app)
