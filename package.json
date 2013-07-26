@@ -12,7 +12,8 @@
     "less-middleware": "*",
     "tropo-webapi": "*",
     "mongoose":"*",
-    "mongoose-timestamp":"*"
+    "mongoose-timestamp":"*",
+    "request": "*"
   },
   "devDependencies": {
   	"mocha": "*",
