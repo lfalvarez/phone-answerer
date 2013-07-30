@@ -40,6 +40,11 @@ app.post('/sms', function(req,res){
   content.value = req.body.session.parameters.msg
   var message = new Message()
   message.say = content
+  // note to self the from international number
+  // must be in the following format
+  // 11234567890
+  // and the chilean number must be in the format
+  // 56912345678
   message.from = config.from_international_number
   message.network = "SMS"
   message.to = number
