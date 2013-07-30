@@ -40,5 +40,6 @@ describe("when the app sends an SMS", function(){
         message.say.value.should.equal('This is a test SMS message from Node.js.' )
         message.from.should.equal(config.from_international_number)
         message.to.should.equal('5551234567')
+        message.network.should.equal('SMS')
     })
 });

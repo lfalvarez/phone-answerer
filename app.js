@@ -41,6 +41,7 @@ app.post('/sms', function(req,res){
   var message = new Message()
   message.say = content
   message.from = config.from_international_number
+  message.network = "SMS"
   message.to = number
   tropo.tropo.push({'message':message})
 
