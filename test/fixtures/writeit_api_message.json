@@ -1,0 +1,21 @@
+{
+"answers": [
+{
+"content": "Public Answer",
+"created": "2013-08-10",
+"id": 1,
+"resource_uri": ""
+}
+],
+"author_email": "",
+"author_name": "",
+"confirmated": true,
+"content": "Content 2",
+"id": 2,
+"moderated": null,
+"public": true,
+"resource_uri": "/api/v1/message/2/",
+"slug": "subject-2",
+"subject": "Subject 2",
+"writeitinstance": "/api/v1/instance/1/"
+}
