@@ -89,7 +89,6 @@ app.post('/', function(req, res){
     }
     var post_url = config.writeit_url + '/api/v1/message/'
     request.post(post_url ,options, function(error, response, body){
-      console.log(error)
       var record = IncomingCallRecord();
       record.from = req.body.session.from.name;
       var remote_message = new RemoteMessage()
