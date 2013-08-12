@@ -7,8 +7,15 @@ var incoming_call_json = require('./fixtures/incoming_call')
 var IncomingCallRecord = require('../lib/models/incoming_call_record')
 var Answer = require('../lib/models/answer')
 var send_sms_request = require('./fixtures/incoming_sms_request')
+var answer_updater =  require('../answer_updater')
+var RemoteMessage = require('../lib/models/remote_message')
 
 describe("The Answer model", function(){
+	after(function(done){
+        IncomingCallRecord.remove(function(err){
+            done()
+        })
+    });
 	it("is created", function(){
 		var answer = new Answer();
 		answer.content = 'oliwi me gusta mucho lo que preguntaste';
@@ -43,7 +50,27 @@ describe("The Answer model", function(){
 })
 
 describe('When retrieving new answers', function(){
-	it('creates a new answer related to the question', function(){
+    before(function(done){
+        var record = IncomingCallRecord()
+        record.from = '+56 9739123123'
+        var remote_message = new RemoteMessage()
+        remote_message.remote_url = '/api/v1/message/3'
+        remote_message.save(function(err){
+            record.remote_message = remote_message
+            record.save(function(err, documento){
+                done()
+            })
+        })
+    })
+	after(function(done){
+        IncomingCallRecord.remove(function(err){
+            done()
+        })
+    });
 
+	it.skip('creates a new answer related to the question', function(done){
+		answer_updater.update(function(){
+			
+		})
 	})
 })

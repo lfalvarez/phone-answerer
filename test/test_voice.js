@@ -27,7 +27,7 @@ describe("when I call on the phone", function(){
         /*
         This is the new mock
         */
-        config.writeit_answer_creation_endpoint = 'http://127.0.0.1:1337/'
+        config.writeit_url = 'http://127.0.0.1:1337'
 
         request(app)
         .post("/")
@@ -95,7 +95,7 @@ describe("when I call on the phone", function(){
 describe("When I call, in writeit", function(){
     var request_post;
     before(function(done){
-        config.writeit_answer_creation_endpoint = 'http://127.0.0.1:1337/'
+        config.writeit_url = 'http://127.0.0.1:1337'
         done()
     })
     afterEach(function(done){
@@ -110,7 +110,7 @@ describe("When I call, in writeit", function(){
     it("a message is created", function(done){
         request_post = sinon.stub(request_http, "post", function(uri, options, callback){
             var args = request_post.args[0][0]
-            uri.should.equal(config.writeit_answer_creation_endpoint)
+            uri.should.equal(config.writeit_url + '/api/v1/message/')
             
             
             options["headers"]["authorization"].should.equal("ApiKey "+config.writeit_username+":"+config.writeit_key)
