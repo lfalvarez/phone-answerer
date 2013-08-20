@@ -10,6 +10,7 @@ var express = require('express')
   , mongoose = require('mongoose')
   , IncomingCallRecord = require('./lib/models/incoming_call_record')
   , RemoteMessage = require('./lib/models/remote_message')
+  , Answer = require('./lib/models/answer')
   , request = require('request')
   , config = require('./config');
 
@@ -52,7 +53,25 @@ app.post('/sms', function(req,res){
 
   res.send(tropowebapi.TropoJSON(tropo))
 })
-
+app.post('/new_answer', function(req, res){
+  var payload = req.body.payload
+  IncomingCallRecord.findOne()
+                    .populate({
+                      'path':'remote_message', 
+                      match: { remote_url: payload.message_id
+                      }})
+                    .exec(function(err, record){
+                      answer = new Answer();
+                      answer.content = payload.person + " dijo "+payload.content
+                      answer.save(function(err, answer){
+                        record.answers.push(answer._id);
+                        record.save(function(err, record){
+                          res.writeHead(200, {'Content-Type': 'text/plain'});
+                          res.end('');
+                        });
+                      })
+                    })
+})
 app.post('/', function(req, res){
   var tropo = new tropowebapi.TropoWebAPI();
   if(req.body.session.userType == 'HUMAN'){
