@@ -38,20 +38,33 @@ app.post('/sms', function(req,res){
   var number = req.body.session.parameters.number
   var tropo = new tropowebapi.TropoWebAPI();
   var content = new Say()
-  content.value = req.body.session.parameters.msg
-  var message = new Message()
-  message.say = content
-  // note to self the from international number
-  // must be in the following format
-  // 11234567890
-  // and the chilean number must be in the format
-  // 56912345678
-  message.from = config.from_international_number
-  message.network = "SMS"
-  message.to = number
-  tropo.tropo.push({'message':message})
 
-  res.send(tropowebapi.TropoJSON(tropo))
+  Answer.findOne({'_id':req.body.session.parameters.id}, function(err, answer){
+    content.value = answer.content
+    var message = new Message()
+    message.say = content
+    // note to self the from international number
+    // must be in the following format
+    // 11234567890
+    // and the chilean number must be in the format
+    // 56912345678
+    message.from = config.from_international_number
+    message.network = "SMS"
+    IncomingCallRecord.findOne()
+                      .and({'answers':answer._id})
+                      .exec(function(err, doc){
+                        number = doc.from
+                        number = number.replace(/(\s+|\+*)/g,'');
+                        message.to = number
+                        tropo.tropo.push({'message':message})
+
+                        res.send(tropowebapi.TropoJSON(tropo))
+                      })
+    
+  })
+
+
+  
 })
 app.post('/new_answer', function(req, res){
   var payload = req.body.payload
@@ -66,6 +79,10 @@ app.post('/new_answer', function(req, res){
                       answer.save(function(err, answer){
                         record.answers.push(answer._id);
                         record.save(function(err, record){
+                          var get_url = 'http://api.tropo.com/1.0/sessions?action=create&token=' + config.tropo_messaging_api_key + '&id=' + answer._id
+                          request.get(get_url, function(error, response, body){
+
+                          })
                           res.writeHead(200, {'Content-Type': 'text/plain'});
                           res.end('');
                         });

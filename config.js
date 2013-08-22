@@ -11,6 +11,7 @@ config.writeit_username = process.env.WRITEIT_USERNAME
 config.writeit_key = process.env.WRITEIT_KEY
 config.remote_writeitinstance_url = process.env.REMOTE_WRITEITINSTANCE_URL
 config.recording_root_url = process.env.RECORDING_ROOT_URL
+config.tropo_messaging_api_key = process.env.TROPO_MESSAGING_API_KEY
 
 
 module.exports = config;

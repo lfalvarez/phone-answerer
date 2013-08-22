@@ -11,6 +11,9 @@ var RemoteMessage = require('../lib/models/remote_message')
 var fs = require('fs')
 var sinon = require("sinon")
 var request_http = require("request")
+var sinon = require("sinon")
+var request_http = require("request")
+var url = require("url")
 
 describe("The Answer model", function(){
 	after(function(done){
@@ -69,7 +72,7 @@ describe('When writeit posts to the webhook', function(){
          
 
         };
-    before(function(done){
+    beforeEach(function(done){
         record = IncomingCallRecord()
         record.from = '+56 9739123123'
         remote_message = new RemoteMessage()
@@ -81,9 +84,12 @@ describe('When writeit posts to the webhook', function(){
             })
         })
     })
-	after(function(done){
+	afterEach(function(done){
         IncomingCallRecord.remove(function(err){
-            done()
+            Answer.remove(function(err){
+                done()
+            })
+            
         })
     });
     it("creates a new answer",function(done){
@@ -103,5 +109,31 @@ describe('When writeit posts to the webhook', function(){
                         done()
                     })
         })
+    });
+    it("sends a request to tropo to send an sms", function(done){
+        request_get = sinon.stub(request_http, "get", function(uri, options, callback){
+            IncomingCallRecord.findOne({'_id': record._id})
+                    .populate('answers')
+                    .exec(function(err, record){
+                        var answer_id = record.answers[0]._id;
+                        uri.should.equal('http://api.tropo.com/1.0/sessions?action=create&token=' + config.tropo_messaging_api_key + '&id=' + answer_id)
+                        done()
+                    })
+            
+        });
+
+        request(app)
+        .post("/new_answer")
+        .send(writeit_payload)
+        .set('Accept', 'text/html')
+        .expect(200)
+        .end(function(err, res){
+            should.not.exist(err)
+            
+        })
+        
+        
+        
     })
+
 })
