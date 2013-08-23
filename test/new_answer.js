@@ -61,13 +61,9 @@ describe('When writeit posts to the webhook', function(){
     var remote_answer_json;
     var request_get;
     var writeit_payload = {
-            'payload':{
                 'message_id':'/api/v1/message/3/',
                 'content':'holiwi',
                 'person': 'Fiera'
-            }
-         
-
         };
     beforeEach(function(done){
         record = IncomingCallRecord()

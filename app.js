@@ -67,8 +67,7 @@ app.post('/sms', function(req,res){
   
 })
 app.post('/new_answer', function(req, res){
-  var payload = req.body.payload
-  console.log(payload)
+  var payload = req.body
   RemoteMessage.findOne({'remote_url':payload.message_id}, function(err, remote_message){
     if(remote_message != null){
       IncomingCallRecord.findOne()
@@ -77,7 +76,6 @@ app.post('/new_answer', function(req, res){
                           'match':{"_id":remote_message._id}
                         })
                         .exec(function(err, record){
-                                console.log(record)
                                 answer = new Answer();
                                 answer.content = payload.person + " dijo "+payload.content
                                 answer.save(function(err, answer){
