@@ -122,7 +122,6 @@ describe('When writeit posts to the webhook', function(){
                     })
             
         });
-
         request(app)
         .post("/new_answer")
         .send(writeit_payload)
@@ -147,7 +146,6 @@ describe('When writeit posts to the webhook', function(){
          
 
         };
-
         request(app)
         .post("/new_answer")
         .send(payload)
