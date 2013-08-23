@@ -68,7 +68,7 @@ app.post('/sms', function(req,res){
 })
 app.post('/new_answer', function(req, res){
   var payload = req.body
-  RemoteMessage.findOne({'remote_url':payload.message_id}, function(err, remote_message){
+  RemoteMessage.findOne({'remote_url':config.writeit_url+payload.message_id}, function(err, remote_message){
     if(remote_message != null){
       IncomingCallRecord.findOne()
                         .populate({

@@ -69,7 +69,7 @@ describe('When writeit posts to the webhook', function(){
         record = IncomingCallRecord()
         record.from = '+56 9739123123'
         remote_message = new RemoteMessage()
-        remote_message.remote_url = '/api/v1/message/3/'
+        remote_message.remote_url = config.writeit_url + '/api/v1/message/3/'
         remote_message.save(function(err){
             record.remote_message = remote_message
             record.save(function(err, documento){
@@ -134,12 +134,9 @@ describe('When writeit posts to the webhook', function(){
         });
         
         var payload = {
-            'payload':{
                 'message_id':'/api/v1/message/4/',
                 'content':'holiwi',
                 'person': 'Fiera'
-            }
-         
 
         };
         request(app)
