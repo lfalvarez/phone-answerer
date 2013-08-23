@@ -74,19 +74,26 @@ app.post('/new_answer', function(req, res){
                       match: { remote_url: payload.message_id
                       }})
                     .exec(function(err, record){
-                      answer = new Answer();
-                      answer.content = payload.person + " dijo "+payload.content
-                      answer.save(function(err, answer){
-                        record.answers.push(answer._id);
-                        record.save(function(err, record){
-                          var get_url = 'http://api.tropo.com/1.0/sessions?action=create&token=' + config.tropo_messaging_api_key + '&id=' + answer._id
-                          request.get(get_url, function(error, response, body){
+                      if(record == null || record.remote_message==null){
+                        res.writeHead(200, {'Content-Type': 'text/plain'});
+                        res.end('');
+                      }
+                      else{
+                        answer = new Answer();
+                        answer.content = payload.person + " dijo "+payload.content
+                        answer.save(function(err, answer){
+                          record.answers.push(answer._id);
+                          record.save(function(err, record){
+                            var get_url = 'http://api.tropo.com/1.0/sessions?action=create&token=' + config.tropo_messaging_api_key + '&id=' + answer._id
+                            request.get(get_url, function(error, response, body){
 
-                          })
-                          res.writeHead(200, {'Content-Type': 'text/plain'});
-                          res.end('');
-                        });
-                      })
+                            })
+                            res.writeHead(200, {'Content-Type': 'text/plain'});
+                            res.end('');
+                          });
+                        })
+                      }
+                      
                     })
 })
 app.post('/', function(req, res){

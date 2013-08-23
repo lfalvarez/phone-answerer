@@ -59,11 +59,8 @@ describe('When writeit posts to the webhook', function(){
     var record;
     var remote_message;
     var remote_answer_json;
+    var request_get;
     var writeit_payload = {
-            'user':{
-                'username':config.writeit_username,
-                'apikey':config.writeit_key
-            },
             'payload':{
                 'message_id':'/api/v1/message/3/',
                 'content':'holiwi',
@@ -87,10 +84,14 @@ describe('When writeit posts to the webhook', function(){
 	afterEach(function(done){
         IncomingCallRecord.remove(function(err){
             Answer.remove(function(err){
+                if (request_get != undefined){
+                    request_get.restore()
+                }
                 done()
             })
             
         })
+        
     });
     it("creates a new answer",function(done){
         request(app)
@@ -130,9 +131,38 @@ describe('When writeit posts to the webhook', function(){
         .end(function(err, res){
             should.not.exist(err)
             
+        })  
+    })
+    it("does not send an sms message or create an answer if the message is not registered", function(done){
+        request_get = sinon.stub(request_http, "get", function(){
+
+        });
+        
+        var payload = {
+            'payload':{
+                'message_id':'/api/v1/message/4/',
+                'content':'holiwi',
+                'person': 'Fiera'
+            }
+         
+
+        };
+
+        request(app)
+        .post("/new_answer")
+        .send(payload)
+        .set('Accept', 'text/html')
+        .expect(200)
+        .end(function(err, res){
+            should.not.exist(err)
+            Answer.count(function(err, count){
+                count.should.equal(0)
+                request_get.neverCalledWith(sinon.match.string)
+                done()
+            })
+            
         })
-        
-        
+
         
     })
 
